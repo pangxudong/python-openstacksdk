@@ -70,6 +70,7 @@ from openstack.object_store import object_store_service
 from openstack.orchestration import orchestration_service
 from openstack.telemetry.alarm import alarm_service
 from openstack.telemetry import telemetry_service
+from openstack.workflow import workflow_service
 
 _logger = logging.getLogger(__name__)
 
@@ -106,6 +107,7 @@ class Profile(object):
         self._add_service(
             orchestration_service.OrchestrationService(version="v1"))
         self._add_service(telemetry_service.TelemetryService(version="v2"))
+        self._add_service(workflow_service.WorkflowService(version="v2"))
 
         if plugins:
             for plugin in plugins:
