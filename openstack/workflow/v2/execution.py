@@ -18,6 +18,7 @@ from openstack import resource2
 
 class Execution(resource2.Resource):
     resource_key = 'execution'
+    resources_key = 'executions'
     base_path = '/executions'
     service = workflow_service.WorkflowService()
 

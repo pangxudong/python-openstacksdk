@@ -18,7 +18,8 @@ from openstack import resource2
 
 class Workflow(resource2.Resource):
     resource_key = 'workflow'
-    base_path = 'workflows'
+    resources_key = 'workflows'
+    base_path = '/workflows'
     service = workflow_service.WorkflowService()
 
     # capabilities
