@@ -29,7 +29,7 @@ class Execution(resource2.Resource):
 
     marker = resource2.Body("marker")
     limit = resource2.Body("limit")
-    sort_keys = resources.Body("sort_keys")
+    sort_keys = resource2.Body("sort_keys")
     sort_dirs = resource2.Body("sort_dirs")
     fields = resource2.Body("fields")
     workflow_name = resource2.Body("workflow_name")
