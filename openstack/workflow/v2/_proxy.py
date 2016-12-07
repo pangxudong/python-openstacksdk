@@ -10,273 +10,125 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from openstack.message.v2 import claim as _claim
-from openstack.message.v2 import message as _message
-from openstack.message.v2 import queue as _queue
-from openstack.message.v2 import subscription as _subscription
+from openstack.workflow.v2 import workflow as _workflow
+from openstack.workflow.v2 import execution as _execution
 from openstack import proxy2
 from openstack import resource2
 
 
 class Proxy(proxy2.BaseProxy):
 
-    def create_queue(self, **attrs):
-        """Create a new queue from attributes
+    def create_workflow(self, **attrs):
+        """Create a new workflow from attributes
 
         :param dict attrs: Keyword arguments which will be used to create
-                           a :class:`~openstack.message.v2.queue.Queue`,
-                           comprised of the properties on the Queue class.
+                           a :class:`~openstack.workflow.v2.workflow.Workflow`,
+                           comprised of the properties on the Workflow class.
 
-        :returns: The results of queue creation
-        :rtype: :class:`~openstack.message.v2.queue.Queue`
+        :returns: The results of workflow creation
+        :rtype: :class:`~openstack.workflow.v2.workflow.Workflow`
         """
-        return self._create(_queue.Queue, **attrs)
+        return self._create(_workflow.Workflow, **attrs)
 
-    def get_queue(self, queue):
-        """Get a queue
+    def get_workflow(self, workflow):
+        """Get a workflow
 
-        :param queue: The value can be the name of a queue or a
-            :class:`~openstack.message.v2.queue.Queue` instance.
+        :param workflow: The value can be the name of a workflow or a
+            :class:`~openstack.workflow.v2.workflow.Workflow` instance.
 
-        :returns: One :class:`~openstack.message.v2.queue.Queue`
+        :returns: One :class:`~openstack.workflow.v2.workflow.Workflow`
         :raises: :class:`~openstack.exceptions.ResourceNotFound` when no
-            queue matching the name could be found.
+            workflow matching the name could be found.
         """
-        return self._get(_queue.Queue, queue)
+        return self._get(_workflow.Workflow, workflow)
 
-    def queues(self, **query):
-        """Retrieve a generator of queues
+    def workflows(self, **query):
+        """Retrieve a generator of workflows
 
         :param kwargs \*\*query: Optional query parameters to be sent to
-            restrict the queues to be returned. Available parameters include:
+            restrict the workflows to be returned. Available parameters include:
 
             * limit: Requests at most the specified number of items be
                 returned from the query.
-            * marker: Specifies the ID of the last-seen queue. Use the limit
+            * marker: Specifies the ID of the last-seen workflow. Use the limit
                 parameter to make an initial limited request and use the ID of
-                the last-seen queue from the response as the marker parameter
+                the last-seen workflow from the response as the marker parameter
                 value in a subsequent limited request.
 
-        :returns: A generator of queue instances.
+        :returns: A generator of workflow instances.
         """
-        return self._list(_queue.Queue, paginated=True, **query)
+        return self._list(_workflow.Workflow, paginated=True, **query)
 
-    def delete_queue(self, value, ignore_missing=True):
-        """Delete a queue
+    def delete_workflow(self, value, ignore_missing=True):
+        """Delete a workflow
 
-        :param value: The value can be either the name of a queue or a
-                      :class:`~openstack.message.v2.queue.Queue` instance.
+        :param value: The value can be either the name of a workflow or a
+                      :class:`~openstack.workflow.v2.workflow.Workflow` instance.
         :param bool ignore_missing: When set to ``False``
                     :class:`~openstack.exceptions.ResourceNotFound` will be
-                    raised when the queue does not exist.
+                    raised when the workflow does not exist.
                     When set to ``True``, no exception will be set when
-                    attempting to delete a nonexistent queue.
+                    attempting to delete a nonexistent workflow.
 
         :returns: ``None``
         """
-        return self._delete(_queue.Queue, value, ignore_missing=ignore_missing)
+        return self._delete(_workflow.Workflow, value, ignore_missing=ignore_missing)
 
-    def post_message(self, queue_name, messages):
-        """Post messages to given queue
+    def create_execution(self, workflow_name, **attrs):
+        """Create a new execution from attributes
 
-        :param queue_name: The name of target queue to post message to.
-        :param list messages: List of messages body and TTL to post.
-
-        :returns: A string includes location of messages successfully posted.
-        """
-        message = self._get_resource(_message.Message, None,
-                                     queue_name=queue_name)
-        return message.post(self.session, messages)
-
-    def messages(self, queue_name, **query):
-        """Retrieve a generator of messages
-
-        :param queue_name: The name of target queue to query messages from.
-        :param kwargs \*\*query: Optional query parameters to be sent to
-            restrict the messages to be returned. Available parameters include:
-
-            * limit: Requests at most the specified number of items be
-                returned from the query.
-            * marker: Specifies the ID of the last-seen subscription. Use the
-                limit parameter to make an initial limited request and use the
-                ID of the last-seen subscription from the response as the
-                marker parameter value in a subsequent limited request.
-            * echo: Indicate if the messages can be echoed back to the client
-                that posted them.
-            * include_claimed: Indicate if the messages list should include
-                the claimed messages.
-
-        :returns: A generator of message instances.
-        """
-        query["queue_name"] = queue_name
-        return self._list(_message.Message, paginated=True, **query)
-
-    def get_message(self, queue_name, message):
-        """Get a message
-
-        :param queue_name: The name of target queue to get message from.
-        :param message: The value can be the name of a message or a
-            :class:`~openstack.message.v2.message.Message` instance.
-
-        :returns: One :class:`~openstack.message.v2.message.Message`
-        :raises: :class:`~openstack.exceptions.ResourceNotFound` when no
-            message matching the criteria could be found.
-        """
-        message = self._get_resource(_message.Message, message,
-                                     queue_name=queue_name)
-        return self._get(_message.Message, message)
-
-    def delete_message(self, queue_name, value, claim=None,
-                       ignore_missing=True):
-        """Delete a message
-
-        :param queue_name: The name of target queue to delete message from.
-        :param value: The value can be either the name of a message or a
-                      :class:`~openstack.message.v2.message.Message` instance.
-        :param claim: The value can be the ID or a
-                      :class:`~openstack.message.v2.claim.Claim` instance of
-                      the claim seizing the message. If None, the message has
-                      not been claimed.
-        :param bool ignore_missing: When set to ``False``
-                    :class:`~openstack.exceptions.ResourceNotFound` will be
-                    raised when the message does not exist.
-                    When set to ``True``, no exception will be set when
-                    attempting to delete a nonexistent message.
-
-        :returns: ``None``
-        """
-        message = self._get_resource(_message.Message, value,
-                                     queue_name=queue_name)
-        message.claim_id = resource2.Resource._get_id(claim)
-        return self._delete(_message.Message, message,
-                            ignore_missing=ignore_missing)
-
-    def create_subscription(self, queue_name, **attrs):
-        """Create a new subscription from attributes
-
-        :param queue_name: The name of target queue to subscribe on.
+        :param workflow_name: The name of target workflow to execution workflow from.
         :param dict attrs: Keyword arguments which will be used to create a
-            :class:`~openstack.message.v2.subscription.Subscription`,
-            comprised of the properties on the Subscription class.
+            :class:`~openstack.workflow.v2.execution.Execution`,
+            comprised of the properties on the Execution class.
 
-        :returns: The results of subscription creation
-        :rtype: :class:`~openstack.message.v2.subscription.Subscription`
+        :returns: The results of execution creation
+        :rtype: :class:`~openstack.workflow.v2.execution.Execution`
         """
-        return self._create(_subscription.Subscription, queue_name=queue_name,
-                            **attrs)
+        return self._create(_execution.Execution, workflow_name=workflow_name, **attrs)
 
-    def subscriptions(self, queue_name, **query):
-        """Retrieve a generator of subscriptions
+    def get_execution(self, workflow_name, execution):
+        """Get a execution
 
-        :param queue_name: The name of target queue to subscribe on.
-        :param kwargs \*\*query: Optional query parameters to be sent to
-            restrict the subscriptions to be returned. Available parameters
-            include:
+        :param workflow_name: The name of target workflow to execution workflow from.
+        :param execution: The value can be either the ID of a execution or a
+            :class:`~openstack.workflow.v2.execution.Execution` instance.
 
-            * limit: Requests at most the specified number of items be
-                returned from the query.
-            * marker: Specifies the ID of the last-seen subscription. Use the
-                limit parameter to make an initial limited request and use the
-                ID of the last-seen subscription from the response as the
-                marker parameter value in a subsequent limited request.
-
-        :returns: A generator of subscription instances.
-        """
-        query["queue_name"] = queue_name
-        return self._list(_subscription.Subscription, paginated=True, **query)
-
-    def get_subscription(self, queue_name, subscription):
-        """Get a subscription
-
-        :param queue_name: The name of target queue of subscription.
-        :param message: The value can be the ID of a subscription or a
-            :class:`~openstack.message.v2.subscription.Subscription` instance.
-
-        :returns: One :class:`~openstack.message.v2.subscription.Subscription`
+        :returns: One :class:`~openstack.workflow.v2.execution.Execution`
         :raises: :class:`~openstack.exceptions.ResourceNotFound` when no
-            subscription matching the criteria could be found.
+            execution matching the criteria could be found.
         """
-        subscription = self._get_resource(_subscription.Subscription,
-                                          subscription,
-                                          queue_name=queue_name)
-        return self._get(_subscription.Subscription, subscription)
+        return self._get(_execution.Execution, execution, workflow_name=workflow_name)
 
-    def delete_subscription(self, queue_name, value, ignore_missing=True):
-        """Delete a subscription
+    def update_execution(self, workflow_name, execution, **attrs):
+        """Update an existing execution from attributes
 
-        :param queue_name: The name of target queue to delete subscription
-                           from.
-        :param value: The value can be either the name of a subscription or a
-                      :class:`~openstack.message.v2.subscription.Subscription`
-                      instance.
-        :param bool ignore_missing: When set to ``False``
-                    :class:`~openstack.exceptions.ResourceNotFound` will be
-                    raised when the subscription does not exist.
-                    When set to ``True``, no exception will be thrown when
-                    attempting to delete a nonexistent subscription.
-
-        :returns: ``None``
-        """
-        subscription = self._get_resource(_subscription.Subscription, value,
-                                          queue_name=queue_name)
-        return self._delete(_subscription.Subscription, subscription,
-                            ignore_missing=ignore_missing)
-
-    def create_claim(self, queue_name, **attrs):
-        """Create a new claim from attributes
-
-        :param queue_name: The name of target queue to claim message from.
-        :param dict attrs: Keyword arguments which will be used to create a
-            :class:`~openstack.message.v2.claim.Claim`,
-            comprised of the properties on the Claim class.
-
-        :returns: The results of claim creation
-        :rtype: :class:`~openstack.message.v2.claim.Claim`
-        """
-        return self._create(_claim.Claim, queue_name=queue_name, **attrs)
-
-    def get_claim(self, queue_name, claim):
-        """Get a claim
-
-        :param queue_name: The name of target queue to claim message from.
-        :param claim: The value can be either the ID of a claim or a
-            :class:`~openstack.message.v2.claim.Claim` instance.
-
-        :returns: One :class:`~openstack.message.v2.claim.Claim`
-        :raises: :class:`~openstack.exceptions.ResourceNotFound` when no
-            claim matching the criteria could be found.
-        """
-        return self._get(_claim.Claim, claim, queue_name=queue_name)
-
-    def update_claim(self, queue_name, claim, **attrs):
-        """Update an existing claim from attributes
-
-        :param queue_name: The name of target queue to claim message from.
-        :param claim: The value can be either the ID of a claim or a
-            :class:`~openstack.message.v2.claim.Claim` instance.
+        :param workflow_name: The name of target workflow to execution workflow from.
+        :param execution: The value can be either the ID of a execution or a
+            :class:`~openstack.workflow.v2.execution.Execution` instance.
         :param dict attrs: Keyword arguments which will be used to update a
-            :class:`~openstack.message.v2.claim.Claim`,
-            comprised of the properties on the Claim class.
+            :class:`~openstack.workflow.v2.execution.Execution`,
+            comprised of the properties on the Execution class.
 
-        :returns: The results of claim update
-        :rtype: :class:`~openstack.message.v2.claim.Claim`
+        :returns: The results of execution update
+        :rtype: :class:`~openstack.workflow.v2.execution.Execution`
         """
-        return self._update(_claim.Claim, claim, queue_name=queue_name,
+        return self._update(_execution.Execution, execution, workflow_name=workflow_name,
                             **attrs)
 
-    def delete_claim(self, queue_name, claim, ignore_missing=True):
-        """Delete a claim
+    def delete_execution(self, workflow_name, execution, ignore_missing=True):
+        """Delete a execution
 
-        :param queue_name: The name of target queue to claim messages from.
-        :param claim: The value can be either the ID of a claim or a
-                      :class:`~openstack.message.v2.claim.Claim` instance.
+        :param workflow_name: The name of target workflow to execution workflows from.
+        :param execution: The value can be either the ID of a execution or a
+                      :class:`~openstack.workflow.v2.execution.Execution` instance.
         :param bool ignore_missing: When set to ``False``
                     :class:`~openstack.exceptions.ResourceNotFound` will be
-                    raised when the claim does not exist.
+                    raised when the execution does not exist.
                     When set to ``True``, no exception will be thrown when
-                    attempting to delete a nonexistent claim.
+                    attempting to delete a nonexistent execution.
 
         :returns: ``None``
         """
-        return self._delete(_claim.Claim, claim, queue_name=queue_name,
+        return self._delete(_execution.Execution, execution, workflow_name=workflow_name,
                             ignore_missing=ignore_missing)
