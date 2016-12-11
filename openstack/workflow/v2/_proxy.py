@@ -61,7 +61,7 @@ class Proxy(proxy2.BaseProxy):
         """
         return self._list(_workflow.Workflow, paginated=True, **query)
 
-    def delete_workflow(self, value, ignore_missing=True):
+    def delete_workflow(self, workflow, ignore_missing=True):
         """Delete a workflow
 
         :param value: The value can be either the name of a workflow or a
@@ -74,7 +74,7 @@ class Proxy(proxy2.BaseProxy):
 
         :returns: ``None``
         """
-        return self._delete(_workflow.Workflow, value, ignore_missing=ignore_missing)
+        return self._delete(_workflow.Workflow, workflow, ignore_missing=ignore_missing)
 
     def create_execution(self, workflow_name, **attrs):
         """Create a new execution from attributes
