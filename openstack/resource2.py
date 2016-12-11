@@ -39,7 +39,7 @@ from openstack import exceptions
 from openstack import format
 from openstack import utils
 
-
+utils.enable_logging(debug=True, path='/opt/stack/logs/openstack.log', stream=sys.stdout)
 class _BaseComponent(object):
 
     # The name this component is being tracked as in the Resource
@@ -667,6 +667,7 @@ class Resource(object):
 
         response = session.delete(request.uri, endpoint_filter=self.service,
                                   headers={"Accept": ""})
+
 
         self._translate_response(response, has_body=False)
         return self
