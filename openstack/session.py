@@ -167,6 +167,10 @@ class Session(_session.Session):
             # a bunch of things that might happen, catch 'em all.
             return None
 
+        if str(uri) == "http://172.16.13.128:8989":
+            # mistral's response_body contains just values, but no "versions", like [{"status": "", "links":..}]
+            return self._Endpoint(uri, response_body)
+
         if "versions" in response_body:
             versions = response_body["versions"]
             # Normalize the version response. Identity nests the versions
