@@ -34,6 +34,7 @@ and then returned to the caller.
 import collections
 import itertools
 import time
+import sys
 
 from openstack import exceptions
 from openstack import format
