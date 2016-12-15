@@ -118,6 +118,23 @@ class Proxy(proxy2.BaseProxy):
         return self._update(_execution.Execution, execution, workflow_name=workflow_name,
                             **attrs)
 
+    def executions(self, **query):
+        """Retrieve a generator of workflows
+
+        :param kwargs \*\*query: Optional query parameters to be sent to
+            restrict the workflows to be returned. Available parameters include:
+
+            * limit: Requests at most the specified number of items be
+                returned from the query.
+            * marker: Specifies the ID of the last-seen workflow. Use the limit
+                parameter to make an initial limited request and use the ID of
+                the last-seen workflow from the response as the marker parameter
+                value in a subsequent limited request.
+
+        :returns: A generator of workflow instances.
+        """
+        return self._list(_workflow.Execution, paginated=True, **query)
+
     def delete_execution(self, workflow_name, execution, ignore_missing=True):
         """Delete a execution
 
