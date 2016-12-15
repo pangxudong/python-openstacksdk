@@ -133,7 +133,7 @@ class Proxy(proxy2.BaseProxy):
 
         :returns: A generator of workflow instances.
         """
-        return self._list(_workflow.Execution, paginated=True, **query)
+        return self._list(_execution.Execution, paginated=True, **query)
 
     def delete_execution(self, workflow_name, execution, ignore_missing=True):
         """Delete a execution
