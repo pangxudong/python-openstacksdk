@@ -41,3 +41,18 @@ class Workflow(resource2.Resource):
     project_id = resource2.Body("project_id")
     created_at = resource2.Body("created_at")
     updated_at = resource2.Body("updated_at")
+
+    def create(self, session, prepend_key=True):
+        request = self._prepare_request(requires_id=False,
+                                        prepend_key=prepend_key)
+
+        headers = {
+            "Content-Type": 'text/plain'
+        }
+        uri=request.uri+"?scope=private"
+        request.headers.update(headers)
+        response = session.post(uri, endpoint_filter=self.service,
+                               json=request.body, headers=request.headers)
+
+        self._translate_response(response, has_body=False)
+        return self
