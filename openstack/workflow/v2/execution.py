@@ -45,3 +45,14 @@ class Execution(resource2.Resource):
     created_at = resource2.Body("created_at")
     updated_at = resource2.Body("updated_at")
     include_output = resource2.Body("include_output")
+
+    def create(self, session, prepend_key=True):
+        request = self._prepare_request(requires_id=False,
+                                        prepend_key=prepend_key)
+
+        request_body = request.body["execution"]
+        response = session.post(request.uri, endpoint_filter=self.service,
+                               json=request_body, headers=request.headers)
+
+        self._translate_response(response, has_body=False)
+        return self
