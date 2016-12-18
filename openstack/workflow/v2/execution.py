@@ -12,11 +12,11 @@
 
 import uuid
 
+from openstack import resource2 as resource
 from openstack.workflow import workflow_service
-from openstack import resource2
 
 
-class Execution(resource2.Resource):
+class Execution(resource.Resource):
     resource_key = 'execution'
     resources_key = 'executions'
     base_path = '/executions'
@@ -28,23 +28,23 @@ class Execution(resource2.Resource):
     allow_get = True
     allow_delete = True
 
-    marker = resource2.Body("marker")
-    limit = resource2.Body("limit")
-    sort_keys = resource2.Body("sort_keys")
-    sort_dirs = resource2.Body("sort_dirs")
-    fields = resource2.Body("fields")
-    workflow_name = resource2.Body("workflow_name")
-    workflow_id = resource2.Body("workflow_id")
-    description = resource2.Body("description")
-    params = resource2.Body("params")
-    task_execution_id = resource2.Body("task_execution_id")
-    state = resource2.Body("state")
-    state_info = resource2.Body("state_info")
-    input = resource2.Body("input")
-    output = resource2.Body("output")
-    created_at = resource2.Body("created_at")
-    updated_at = resource2.Body("updated_at")
-    include_output = resource2.Body("include_output")
+    marker = resource.Body("marker")
+    limit = resource.Body("limit")
+    sort_keys = resource.Body("sort_keys")
+    sort_dirs = resource.Body("sort_dirs")
+    fields = resource.Body("fields")
+    workflow_name = resource.Body("workflow_name")
+    workflow_id = resource.Body("workflow_id")
+    description = resource.Body("description")
+    params = resource.Body("params")
+    task_execution_id = resource.Body("task_execution_id")
+    state = resource.Body("state")
+    state_info = resource.Body("state_info")
+    input = resource.Body("input")
+    output = resource.Body("output")
+    created_at = resource.Body("created_at")
+    updated_at = resource.Body("updated_at")
+    include_output = resource.Body("include_output")
 
     def create(self, session, prepend_key=True):
         request = self._prepare_request(requires_id=False,
