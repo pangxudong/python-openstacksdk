@@ -12,8 +12,6 @@
 
 from openstack.workflow.v2 import workflow as _workflow
 from openstack.workflow.v2 import execution as _execution
-from openstack.workflow.v2 import task as _task
-from openstack.workflow.v2 import action as _action
 from openstack import proxy2
 from openstack import resource2
 
