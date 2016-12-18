@@ -27,5 +27,5 @@ class Version(resource.Resource):
     allow_list = True
 
     # Properties
-    links = resource.Body('links')
+    links = resource.Body('link')
     status = resource.Body('status')
