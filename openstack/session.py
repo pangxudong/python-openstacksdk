@@ -168,9 +168,7 @@ class Session(_session.Session):
             return None
 
         if str(uri) == "http://172.16.13.128:8989":
-            # mistral's response_body contains just values, but no "versions", like [{"status": "", "links":..}]
-            response_body = {"versions": [{"status": "CURRENT", "updated": "2016-01-18T00:00:00Z", "media-types": [{"base": "application/json", "type": "application/vnd.openstack.workflow-v2+json"}], "id": "2.0", "links": [{"href": "http://172.16.13.128:8989/v2/", "rel": "self"}]}]}
-            #response_body = {"versions": [{"status": "CURRENT", "updated": "2016-01-18T00:00:00Z", "media-types": [{"base": "text/plain", "type": "application/vnd.openstack.workflow-v2+json"}], "id": "2.0", "links": [{"href": "http://172.16.13.128:8989/v2/", "rel": "self"}]}]}
+            response_body = {"versions": response_body}
 
         if "versions" in response_body:
             versions = response_body["versions"]
