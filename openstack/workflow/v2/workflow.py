@@ -49,11 +49,13 @@ class Workflow(resource.Resource):
         headers = {
             "Content-Type": 'text/plain'
         }
+        kwargs = {
+            "data": request.body["workflow"]["definition"]
+        }
         uri=request.uri+"?scope=private"
-        request_body = request.body["workflow"]
         request.headers.update(headers)
         response = session.post(uri, endpoint_filter=self.service,
-                               json=request_body, headers=request.headers)
+                               json=None, headers=request.headers, **kwargs)
 
         self._translate_response(response, has_body=False)
         return self
