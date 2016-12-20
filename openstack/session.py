@@ -167,9 +167,6 @@ class Session(_session.Session):
             # a bunch of things that might happen, catch 'em all.
             return None
 
-        if str(uri) == "http://172.16.13.128:8989":
-            response_body = {"versions": response_body}
-
         if "versions" in response_body:
             versions = response_body["versions"]
             # Normalize the version response. Identity nests the versions
