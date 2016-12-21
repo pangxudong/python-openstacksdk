@@ -26,7 +26,6 @@ class Execution(resource.Resource):
     allow_create = True
     allow_list = True
     allow_get = True
-    allow_delete = True
 
     marker = resource.Body("marker")
     limit = resource.Body("limit")
