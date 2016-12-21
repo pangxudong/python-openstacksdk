@@ -74,7 +74,7 @@ class Proxy(proxy2.BaseProxy):
         """
         return self._delete(_workflow.Workflow, workflow_name, ignore_missing=ignore_missing)
 
-    def create_execution(self, workflow_name, **attrs):
+    def create_execution(self, **attrs):
         """Create a new execution from attributes
 
         :param workflow_name: The name of target workflow to execution workflow from.
@@ -85,7 +85,7 @@ class Proxy(proxy2.BaseProxy):
         :returns: The results of execution creation
         :rtype: :class:`~openstack.workflow.v2.execution.Execution`
         """
-        return self._create(_execution.Execution, workflow_name=workflow_name, **attrs)
+        return self._create(_execution.Execution, **attrs)
 
     def get_execution(self, workflow_name, execution):
         """Get a execution

@@ -52,7 +52,7 @@ class Workflow(resource.Resource):
         kwargs = {
             "data": request.body["workflow"]["definition"]
         }
-        uri=request.uri+"?scope=private"
+        uri=request.uri+"?scope=%s" % request.body["workflow"]["scope"]
         request.headers.update(headers)
         response = session.post(uri, endpoint_filter=self.service,
                                json=None, headers=request.headers, **kwargs)
