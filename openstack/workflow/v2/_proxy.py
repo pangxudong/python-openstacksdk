@@ -30,7 +30,7 @@ class Proxy(proxy2.BaseProxy):
         """
         return self._create(_workflow.Workflow, **attrs)
 
-    def get_workflow(self, workflow):
+    def get_workflow(self, *attrs):
         """Get a workflow
 
         :param workflow: The value can be the name of a workflow or a
@@ -40,7 +40,7 @@ class Proxy(proxy2.BaseProxy):
         :raises: :class:`~openstack.exceptions.ResourceNotFound` when no
             workflow matching the name could be found.
         """
-        return self._get(_workflow.Workflow, workflow)
+        return self._get(_workflow.Workflow, *attrs)
 
     def workflows(self, **query):
         """Retrieve a generator of workflows
@@ -59,7 +59,7 @@ class Proxy(proxy2.BaseProxy):
         """
         return self._list(_workflow.Workflow, paginated=True, **query)
 
-    def delete_workflow(self, workflow_name, ignore_missing=True):
+    def delete_workflow(self, ignore_missing=True, *attrs):
         """Delete a workflow
 
         :param value: The value can be either the name of a workflow or a
@@ -72,7 +72,7 @@ class Proxy(proxy2.BaseProxy):
 
         :returns: ``None``
         """
-        return self._delete(_workflow.Workflow, workflow_name, ignore_missing=ignore_missing)
+        return self._delete(_workflow.Workflow, ignore_missing=ignore_missing, *attrs)
 
     def create_execution(self, **attrs):
         """Create a new execution from attributes
@@ -87,7 +87,7 @@ class Proxy(proxy2.BaseProxy):
         """
         return self._create(_execution.Execution, **attrs)
 
-    def get_execution(self, workflow_name, execution):
+    def get_execution(self, *attrs):
         """Get a execution
 
         :param workflow_name: The name of target workflow to execution workflow from.
@@ -98,23 +98,7 @@ class Proxy(proxy2.BaseProxy):
         :raises: :class:`~openstack.exceptions.ResourceNotFound` when no
             execution matching the criteria could be found.
         """
-        return self._get(_execution.Execution, execution, workflow_name=workflow_name)
-
-    def update_execution(self, workflow_name, execution, **attrs):
-        """Update an existing execution from attributes
-
-        :param workflow_name: The name of target workflow to execution workflow from.
-        :param execution: The value can be either the ID of a execution or a
-            :class:`~openstack.workflow.v2.execution.Execution` instance.
-        :param dict attrs: Keyword arguments which will be used to update a
-            :class:`~openstack.workflow.v2.execution.Execution`,
-            comprised of the properties on the Execution class.
-
-        :returns: The results of execution update
-        :rtype: :class:`~openstack.workflow.v2.execution.Execution`
-        """
-        return self._update(_execution.Execution, execution, workflow_name=workflow_name,
-                            **attrs)
+        return self._get(_execution.Execution, *attrs)
 
     def executions(self, **query):
         """Retrieve a generator of workflows
@@ -133,7 +117,7 @@ class Proxy(proxy2.BaseProxy):
         """
         return self._list(_execution.Execution, paginated=True, **query)
 
-    def delete_execution(self, workflow_name, execution, ignore_missing=True):
+    def delete_execution(self, ignore_missing=True, *attrs):
         """Delete a execution
 
         :param workflow_name: The name of target workflow to execution workflows from.
@@ -147,5 +131,4 @@ class Proxy(proxy2.BaseProxy):
 
         :returns: ``None``
         """
-        return self._delete(_execution.Execution, execution, workflow_name=workflow_name,
-                            ignore_missing=ignore_missing)
+        return self._delete(_execution.Execution, ignore_missing=ignore_missing, *attrs)
