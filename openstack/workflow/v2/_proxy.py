@@ -59,7 +59,7 @@ class Proxy(proxy2.BaseProxy):
         """
         return self._list(_workflow.Workflow, paginated=True, **query)
 
-    def delete_workflow(self, ignore_missing=True, *attrs):
+    def delete_workflow(self, *attrs):
         """Delete a workflow
 
         :param value: The value can be either the name of a workflow or a
@@ -72,7 +72,7 @@ class Proxy(proxy2.BaseProxy):
 
         :returns: ``None``
         """
-        return self._delete(_workflow.Workflow, ignore_missing=ignore_missing, *attrs)
+        return self._delete(_workflow.Workflow, *attrs)
 
     def create_execution(self, **attrs):
         """Create a new execution from attributes
@@ -116,19 +116,3 @@ class Proxy(proxy2.BaseProxy):
         :returns: A generator of workflow instances.
         """
         return self._list(_execution.Execution, paginated=True, **query)
-
-    def delete_execution(self, ignore_missing=True, *attrs):
-        """Delete a execution
-
-        :param workflow_name: The name of target workflow to execution workflows from.
-        :param execution: The value can be either the ID of a execution or a
-                      :class:`~openstack.workflow.v2.execution.Execution` instance.
-        :param bool ignore_missing: When set to ``False``
-                    :class:`~openstack.exceptions.ResourceNotFound` will be
-                    raised when the execution does not exist.
-                    When set to ``True``, no exception will be thrown when
-                    attempting to delete a nonexistent execution.
-
-        :returns: ``None``
-        """
-        return self._delete(_execution.Execution, ignore_missing=ignore_missing, *attrs)
