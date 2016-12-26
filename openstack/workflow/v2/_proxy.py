@@ -59,7 +59,7 @@ class Proxy(proxy2.BaseProxy):
         """
         return self._list(_workflow.Workflow, paginated=True, **query)
 
-    def delete_workflow(self, *attrs):
+    def delete_workflow(self, value, ignore_missing=True):
         """Delete a workflow
 
         :param value: The value can be either the name of a workflow or a
@@ -72,7 +72,8 @@ class Proxy(proxy2.BaseProxy):
 
         :returns: ``None``
         """
-        return self._delete(_workflow.Workflow, *attrs)
+        return self._delete(_workflow.Workflow, value,
+                          ignore_missing=ignore_missing)
 
     def find_workflow(self, name_or_id, ignore_missing=True):
         """Find a single workflow
@@ -132,7 +133,7 @@ class Proxy(proxy2.BaseProxy):
         """
         return self._list(_execution.Execution, paginated=True, **query)
 
-    def delete_execution(self, *attrs):
+    def delete_execution(self, value, ignore_missing=True):
         """Delete an execution
 
         :param value: The value can be either the name of a workflow or a
@@ -145,4 +146,5 @@ class Proxy(proxy2.BaseProxy):
 
         :returns: ``None``
         """
-        return self._delete(_execution.Execution, *attrs)
+        return self._delete(_execution.Execution, value,
+                          ignore_missing=ignore_missing)
