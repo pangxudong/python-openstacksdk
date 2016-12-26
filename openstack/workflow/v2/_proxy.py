@@ -131,3 +131,18 @@ class Proxy(proxy2.BaseProxy):
         :returns: A generator of workflow instances.
         """
         return self._list(_execution.Execution, paginated=True, **query)
+
+    def delete_execution(self, *attrs):
+        """Delete an execution
+
+        :param value: The value can be either the name of a workflow or a
+                      :class:`~openstack.workflow.v2.workflow.Workflow` instance.
+        :param bool ignore_missing: When set to ``False``
+                    :class:`~openstack.exceptions.ResourceNotFound` will be
+                    raised when the workflow does not exist.
+                    When set to ``True``, no exception will be set when
+                    attempting to delete a nonexistent workflow.
+
+        :returns: ``None``
+        """
+        return self._delete(_execution.Execution, *attrs)
