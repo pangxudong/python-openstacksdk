@@ -148,3 +148,18 @@ class Proxy(proxy2.BaseProxy):
         """
         return self._delete(_execution.Execution, value,
                           ignore_missing=ignore_missing)
+
+    def find_execution(self, name_or_id, ignore_missing=True):
+        """Find a single execution
+
+        :param name_or_id: The name or ID of an workflow.
+        :param bool ignore_missing: When set to ``False``
+                    :class:`~openstack.exceptions.ResourceNotFound` will be
+                    raised when the resource does not exist.
+                    When set to ``True``, None will be returned when
+                    attempting to find a nonexistent resource.
+        :returns: One :class:`~openstack.compute.v2.workflow.Extension` or
+                  None
+        """
+        return self._find(_execution.Execution, name_or_id,
+                          ignore_missing=ignore_missing)
