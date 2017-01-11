@@ -54,5 +54,5 @@ class Execution(resource.Resource):
         response = session.post(request.uri, endpoint_filter=self.service,
                                json=request_body, headers=request.headers)
 
-        self._translate_response(response, has_body=False)
+        self._translate_response(response)
         return self
