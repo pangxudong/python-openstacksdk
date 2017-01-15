@@ -163,3 +163,8 @@ class Proxy(proxy2.BaseProxy):
         """
         return self._find(_execution.Execution, name_or_id,
                           ignore_missing=ignore_missing)
+
+    def wait_for_execution(self, execution, status='SUCCESS', failures=['ERROR'],
+                        interval=2, wait=120):
+        return resource2.wait_for_status(self.session, execution, status,
+                                         failures, interval, wait)
