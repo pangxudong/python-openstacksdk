@@ -21,6 +21,6 @@ class WorkflowService(service_filter.ServiceFilter):
     def __init__(self, version=None):
         """Create a workflow service."""
         super(WorkflowService, self).__init__(
-            service_type='workflow',
+            service_type='workflowv2',
             version=version
         )
